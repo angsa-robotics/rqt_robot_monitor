@@ -159,11 +159,19 @@ class RobotMonitorWidget(QWidget):
             for name, status in status.items():
                 # Compute path and walk to appropriate subtree
                 path = name.split('/')
+
+                # Remove empty entries
+                while len(path) > 0 and path[0] == '':
+                    path = path[1:]
+
+                # Reject empty name
+                if len(path) == 0:
+                    print("Skipping", name, name.split("/"))
+                    continue
+                print(path, "is", status.level)
                 tmp_tree = self._tree
                 tmp_err_tree = self._err_tree
                 tmp_warn_tree = self._warn_tree
-                if path[0] == '':
-                    path = path[1:]
                 tmp_tree.update(status, util.get_resource_name(name))
                     #tmp_tree = tmp_tree['Robot']
                     #tmp_tree.update(status, 'Robot')
@@ -173,7 +181,7 @@ class RobotMonitorWidget(QWidget):
                     if p != '':
                         tmp_tree = tmp_tree[p]
 
-                        if p == leaf:
+                        if leaf == p:
                             tmp_tree.update(status, p)
 
                         # Check for warnings
@@ -185,6 +193,8 @@ class RobotMonitorWidget(QWidget):
                         if status.level in [DiagnosticStatus.ERROR, DiagnosticStatus.STALE]:
                             tmp_err_tree = tmp_err_tree[p]
                             tmp_err_tree.update(status, p)
+                        elif p in tmp_err_tree:
+                            pass
 
             self.err_flattree.expandAll()
             self.warn_flattree.expandAll()

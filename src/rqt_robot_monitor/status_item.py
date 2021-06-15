@@ -75,6 +75,7 @@ class StatusItem(object):
                 self._children[child].prune()
         if len(stale) > 0:
             for child in stale:
+                print("DELETING ", child)
                 self._item.removeChild(self._children[child]._item)
                 del self._children[child]
         self.updated = False
