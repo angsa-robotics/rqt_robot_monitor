@@ -171,20 +171,21 @@ class RobotMonitorWidget(QWidget):
                 leaf = path[-1]
                 for i, p in enumerate(path):
                     if p != '':
-                        # Check for warnings
-                        if status.level is DiagnosticStatus.WARN:
-                            tmp_warn_tree[p].update(status, p)
-                            tmp_warn_tree = tmp_warn_tree[p]
-
                         tmp_tree = tmp_tree[p]
-                        tmp_err_tree = tmp_err_tree[p]
 
                         if p == leaf:
                             tmp_tree.update(status, p)
 
-                            # Check for errors
-                            if status.level in [DiagnosticStatus.ERROR, DiagnosticStatus.STALE]:
-                                tmp_err_tree.update(status, p)
+                        # Check for warnings
+                        if status.level is DiagnosticStatus.WARN:
+                            tmp_warn_tree = tmp_warn_tree[p]
+                            tmp_warn_tree[p].update(status, p)
+
+                        # Check for errors
+                        if status.level in [DiagnosticStatus.ERROR, DiagnosticStatus.STALE]:
+                            tmp_err_tree = tmp_err_tree[p]
+                            tmp_err_tree.update(status, p)
+
             self.err_flattree.expandAll()
             self.warn_flattree.expandAll()
         else:

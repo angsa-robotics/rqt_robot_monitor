@@ -23,6 +23,9 @@
       <property name="text">
        <string>Alternative view</string>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
     </widget>
     </item>
     <item>
